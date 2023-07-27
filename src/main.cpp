@@ -1,16 +1,25 @@
 #include <Arduino.h>
 
-const float FREQUENCY = 60;
-const float DUTY_CYCLE = 0.5; 
+float frequency = 0;
+const float DUTY_CYCLE = 0.3; 
 const int OUTPIN = 13;
-const int NUMCYCLES = 1000;
+const int NUMCYCLES = 1000; //round trip = 15120
 
 
 
 void squareWave()
-{
-  // Calculate the period of the wave based on the frequency
-  float period = 1 / FREQUENCY;
+{  
+  Serial.println("Starting");
+  for (int i = 0; i < NUMCYCLES; i++)
+  {
+    if(i < 7560) {
+      frequency = 80;
+    }
+    else {
+      frequency = 120;
+    }
+    // Calculate the period of the wave based on the frequency
+  float period = 1 / frequency;
 
   // Calculate the duration of the high state based on the duty cycle
   float highDuration = period * DUTY_CYCLE * 1000000;
@@ -18,12 +27,6 @@ void squareWave()
   // Calculate the duration of the low state
   float lowDuration = period * (1 - DUTY_CYCLE) * 1000000;
 
-  // Generate the square wave
-  
-  
-  Serial.println("Starting");
-  for (int i = 0; i < NUMCYCLES; i++)
-  {
     digitalWrite(OUTPIN, HIGH);
     //Serial.println("high");
     delayMicroseconds((int)highDuration);
@@ -56,7 +59,6 @@ void setup()
   pinMode(OUTPIN, OUTPUT); 
   digitalWrite(OUTPIN, LOW);
   Serial.println("Signal Generator");
-  Serial.println("Frequency: " + String(FREQUENCY) + "Hz");
   Serial.println("Duty Cycle: " + String(DUTY_CYCLE * 100) + "%");
   Serial.println("Output Pin: " + String(OUTPIN));
   Serial.println("Press R to start");
